@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: techdays-demo
+spec:
+  type: NodePort
+  selector:
+    io.kompose.service: techdays.demo
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: techdays.demo
+  name: techdays.demo
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: techdays.demo
+    spec:
+      imagePullSecrets:
+            - name: acrconnection
+      "nodeSelector": {
+       "beta.kubernetes.io/os": "windows"
+      }
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: **{ASPNETCORE_ENVIRONMENT}**
+        image: [CONTAINER_CLUSTER]/techdays.demo:#{Build.BuildNumber}#
+        name: techdays-demo
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}
