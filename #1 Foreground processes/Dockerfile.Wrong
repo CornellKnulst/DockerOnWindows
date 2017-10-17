@@ -1,0 +1,3 @@
+FROM microsoft/windowsservercore
+RUN powershell -Command Add-WindowsFeature Web-Server
+EXPOSE 80

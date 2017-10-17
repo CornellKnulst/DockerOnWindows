@@ -1,0 +1,11 @@
+# escape=`
+FROM microsoft/windowsservercore
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+ENV AZ_PATH="C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;"
+
+RUN Invoke-WebRequest "https://aka.ms/InstallAzureCliWindows" -OutFile az.msi -UseBasicParsing;
+RUN Start-Process msiexec.exe -ArgumentList '/i', 'C:\az.msi', '/quiet', '/norestart' -NoNewWindow -Wait;
+RUN Remove-Item az.msi;
+RUN $env:PATH = $env:AZ_PATH + $env:PATH;
+RUN [Environment]::SetEnvironmentVariable('PATH', $env:PATH, [EnvironmentVariableTarget]::Machine)
