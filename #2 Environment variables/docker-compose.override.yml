@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  dockerizedwebappdemo:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Message=Development
+    ports:
+      - "80"
+networks:
+  default:
+    external:
+      name: nat
